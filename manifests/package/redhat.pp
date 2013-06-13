@@ -16,10 +16,10 @@
 class nginx::package::redhat {
   $redhat_packages = ['nginx', 'GeoIP', 'gd', 'libXpm', 'libxslt']
 
-  if downcase($::operatingsystem) == "redhat" {
-    $os_type = "rhel"
-  } else {
-    $os_type = downcase($::operatingsystem)
+  # Why is this even necessary? We're already in the redhat package
+  $os_type = downcase($::osfamily) ? {
+    default  => downcase($::operatingsystem),
+    'redhat' => "rhel",
   }
 
   if $::lsbmajdistrelease == undef {
