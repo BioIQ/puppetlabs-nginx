@@ -23,6 +23,7 @@
 #   [*ssl_port*]            - Default IP Port for NGINX to listen with this SSL vHost on. Defaults to TCP 443
 #   [*server_name*]         - List of vhostnames for which this vhost will respond. Default [$name].
 #   [*www_root*]            - Specifies the location on disk for files to be read from. Cannot be set in conjunction with $proxy
+#   [*rewrite*]             - Adds a reweite rule to vhost.
 #   [*rewrite_www_to_non_www*]  - Adds a server directive and rewrite rule to rewrite www.domain.com to domain.com in order to avoid
 #                             duplicate content (SEO);
 #   [*try_files*]           - Specifies the locations for files to be checked as an array. Cannot be used in conjuction with $proxy.
@@ -62,7 +63,8 @@ define nginx::resource::vhost(
   $rewrite_www_to_non_www = false,
   $location_cfg_prepend   = undef,
   $location_cfg_append    = undef,
-  $try_files              = undef
+  $try_files              = undef,
+  $rewrite                = [],
 ) {
 
   File {
