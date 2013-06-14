@@ -54,7 +54,7 @@ define nginx::resource::location(
   $index_files          = ['index.html', 'index.htm', 'index.php'],
   $proxy                = undef,
   $proxy_read_timeout   = $nginx::params::nx_proxy_read_timeout,
-  $proxy_template       = $nginx::params::nx_proxy_location_template,
+  $location_template    = undef,
   $ssl                  = false,
   $ssl_only		= false,
   $location_alias       = undef,
@@ -79,8 +79,10 @@ define nginx::resource::location(
   }
 
   # Use proxy template if $proxy is defined, otherwise use directory template.
-  if ($proxy != undef) {
-    $content_real = template($proxy_template)
+  if ($location_template) {
+    $content_real = template($location_template)
+  } elsif ($proxy != undef) {
+    $content_real = template('nginx/vhost/vhost_location_proxy.erb')
   } elsif ($location_alias != undef) {
     $content_real = template('nginx/vhost/vhost_location_alias.erb')
   } elsif ($stub_status != undef) {

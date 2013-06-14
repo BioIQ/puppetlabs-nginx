@@ -41,7 +41,6 @@ class nginx::params {
   $nx_proxy_send_timeout      = '90'
   $nx_proxy_read_timeout      = '90'
   $nx_proxy_buffers           = '32 4k'
-  $nx_proxy_location_template = 'nginx/vhost/vhost_location_proxy.erb'
 
   $nx_logdir = $::kernel ? {
     /(?i-mx:linux)/ => '/var/log/nginx',
