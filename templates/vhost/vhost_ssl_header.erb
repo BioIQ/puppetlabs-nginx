@@ -17,5 +17,5 @@ server {
   ssl_prefer_server_ciphers   on;
 
   <% @rewrite.each do |rw| -%>
-  rewrite <%= rw %>;
+rewrite <%= rw %>;
   <% end -%>
