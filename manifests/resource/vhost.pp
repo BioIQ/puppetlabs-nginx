@@ -23,7 +23,7 @@
 #   [*ssl_port*]            - Default IP Port for NGINX to listen with this SSL vHost on. Defaults to TCP 443
 #   [*server_name*]         - List of vhostnames for which this vhost will respond. Default [$name].
 #   [*www_root*]            - Specifies the location on disk for files to be read from. Cannot be set in conjunction with $proxy
-#   [*rewrite*]             - Adds a reweite rule to vhost.
+#   [*rewrite*]             - Adds a rewrite rule to vhost.
 #   [*rewrite_www_to_non_www*]  - Adds a server directive and rewrite rule to rewrite www.domain.com to domain.com in order to avoid
 #                             duplicate content (SEO);
 #   [*try_files*]           - Specifies the locations for files to be checked as an array. Cannot be used in conjuction with $proxy.
@@ -52,7 +52,7 @@ define nginx::resource::vhost(
   $ssl                    = false,
   $ssl_cert               = undef,
   $ssl_key                = undef,
-  $ssl_port		  = '443',
+  $ssl_port               = '443',
   $proxy                  = undef,
   $proxy_read_timeout     = $nginx::params::nx_proxy_read_timeout,
   $location_template      = undef,
@@ -65,6 +65,9 @@ define nginx::resource::vhost(
   $location_cfg_append    = undef,
   $try_files              = undef,
   $rewrite                = [],
+  $auth_basic             = undef,
+  $auth_file              = undef,
+  $auth_location          = $nginx::params::nx_auth_dir
 ) {
 
   File {
@@ -115,6 +118,9 @@ define nginx::resource::vhost(
     location_template    => $location_template,
     try_files            => $try_files,
     www_root             => $www_root,
+    auth_basic           => $auth_basic,
+    auth_file            => $auth_file,
+    auth_location        => $auth_location,
     notify               => Class['nginx::service'],
   }
 

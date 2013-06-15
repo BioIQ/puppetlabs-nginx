@@ -18,6 +18,7 @@ class nginx::params {
   $nx_run_dir  = '/var/nginx'
 
   $nx_conf_dir           = '/etc/nginx'
+  $nx_auth_dir           = "${nx_conf_dir}/auth"
   $nx_confd_purge        = false
   $nx_worker_processes   = 1
   $nx_worker_connections = 1024

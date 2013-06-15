@@ -41,6 +41,11 @@ class nginx::config(
   }
 
 
+  file { $nginx::params::nx_auth_dir:
+    ensure => directory,
+    require => File[$nginx::params::nx_conf_dir]
+  }
+  
   file { "${nginx::config::nx_run_dir}":
     ensure => directory,
   }

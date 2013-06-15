@@ -65,6 +65,9 @@ define nginx::resource::location(
   $try_files            = undef,
   $non_ssl_file_order   = '500',
   $ssl_file_order       = '800',
+  $auth_basic           = undef,
+  $auth_file            = undef,
+  $auth_location        = $nginx::params::nx_auth_dir,
   $location
 ) {
   File {
@@ -104,11 +107,32 @@ define nginx::resource::location(
     fail('Cannot define both directory and proxy in a virtual host')
   }
 
+  # Auth 
+  if $auth_basic {
+    if ($auth_file == undef) {
+      fail('nginx: must specify auth_file if using auth_basic')
+    }
+
+    $auth_file_path = "${auth_location}/${vhost}-${name}-auth"
+    file { $auth_file_path:
+      ensure => $ensure_real,
+      content => template($auth_file)
+    }
+  }
+
   ## Create stubs for vHost File Fragment Pattern
   if ($ssl_only != true) {
     file {"${nginx::config::nx_temp_dir}/nginx.d/${vhost}-${non_ssl_file_order}-${name}":
       ensure  => $ensure_real,
       content => $content_real,
+    }
+
+    if $auth_basic {
+      file { "${nginx::config::nx_temp_dir}/nginx.d/${vhost}-${non_ssl_file_order}-${name}-auth":
+        ensure  => $ensure_real,
+        content => template($auth_file_path),
+        require => File[$auth_file_path]
+      }
     }
   }
 
@@ -117,6 +141,14 @@ define nginx::resource::location(
     file {"${nginx::config::nx_temp_dir}/nginx.d/${vhost}-${ssl_file_order}-${name}-ssl":
       ensure  => $ensure_real,
       content => $content_real,
+    }
+
+    if $auth_basic {
+      file { "${nginx::config::nx_temp_dir}/nginx.d/${vhost}-${ssl_file_order}-${name}-auth":
+        ensure  => $ensure_real,
+        content => template($auth_file_path),
+        require => File[$auth_file_path]
+      }
     }
   }
 }
