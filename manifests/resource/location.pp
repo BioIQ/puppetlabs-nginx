@@ -130,7 +130,7 @@ define nginx::resource::location(
     if $auth_basic {
       file { "${nginx::config::nx_temp_dir}/nginx.d/${vhost}-${non_ssl_file_order}-${name}-auth":
         ensure  => $ensure_real,
-        content => template($auth_file_path),
+        content => template('nginx/vhost/vhost_auth.erb'),
         require => File[$auth_file_path]
       }
     }
@@ -146,7 +146,7 @@ define nginx::resource::location(
     if $auth_basic {
       file { "${nginx::config::nx_temp_dir}/nginx.d/${vhost}-${ssl_file_order}-${name}-auth":
         ensure  => $ensure_real,
-        content => template($auth_file_path),
+        content => template('nginx/vhost/vhost_auth.erb'),
         require => File[$auth_file_path]
       }
     }
