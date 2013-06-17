@@ -83,6 +83,21 @@ define nginx::resource::location(
     default  => file,
   }
 
+  # Auth 
+  if $auth_basic {
+    if ($auth_file == undef) {
+      fail('nginx: must specify auth_file if using auth_basic')
+    }
+
+    $auth_file_path = "${auth_location}/${vhost}-${name}-auth"
+    file { $auth_file_path:
+      ensure => $ensure_real,
+      content => template($auth_file)
+    }
+
+    $auth_content = template('nginx/vhost/vhost_auth.erb')
+  }
+
   # Use proxy template if $proxy is defined, otherwise use directory template.
   if ($location_template) {
     $content_real = template($location_template)
@@ -96,6 +111,11 @@ define nginx::resource::location(
     $content_real = template('nginx/vhost/vhost_location_directory.erb')
   }
 
+  $final_content = $auth_basic ? {
+    undef   => $content_real,
+    default => "${content_real}${auth_content}"
+  }
+
   ## Check for various error condtiions
   if ($vhost == undef) {
     fail('Cannot create a location reference without attaching to a virtual host')
@@ -107,32 +127,11 @@ define nginx::resource::location(
     fail('Cannot define both directory and proxy in a virtual host')
   }
 
-  # Auth 
-  if $auth_basic {
-    if ($auth_file == undef) {
-      fail('nginx: must specify auth_file if using auth_basic')
-    }
-
-    $auth_file_path = "${auth_location}/${vhost}-${name}-auth"
-    file { $auth_file_path:
-      ensure => $ensure_real,
-      content => template($auth_file)
-    }
-  }
-
   ## Create stubs for vHost File Fragment Pattern
   if ($ssl_only != true) {
     file {"${nginx::config::nx_temp_dir}/nginx.d/${vhost}-${non_ssl_file_order}-${name}":
       ensure  => $ensure_real,
-      content => $content_real,
-    }
-
-    if $auth_basic {
-      file { "${nginx::config::nx_temp_dir}/nginx.d/${vhost}-${non_ssl_file_order}-${name}-auth":
-        ensure  => $ensure_real,
-        content => template('nginx/vhost/vhost_auth.erb'),
-        require => File[$auth_file_path]
-      }
+      content => $final_content,
     }
   }
 
@@ -140,15 +139,7 @@ define nginx::resource::location(
   if ($ssl == true) {
     file {"${nginx::config::nx_temp_dir}/nginx.d/${vhost}-${ssl_file_order}-${name}-ssl":
       ensure  => $ensure_real,
-      content => $content_real,
-    }
-
-    if $auth_basic {
-      file { "${nginx::config::nx_temp_dir}/nginx.d/${vhost}-${ssl_file_order}-${name}-auth":
-        ensure  => $ensure_real,
-        content => template('nginx/vhost/vhost_auth.erb'),
-        require => File[$auth_file_path]
-      }
+      content => $final_content,
     }
   }
 }
