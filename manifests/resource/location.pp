@@ -94,8 +94,6 @@ define nginx::resource::location(
       ensure => $ensure_real,
       content => template($auth_file)
     }
-
-    $auth_content = template('nginx/vhost/vhost_auth.erb')
   }
 
   # Use proxy template if $proxy is defined, otherwise use directory template.
@@ -109,11 +107,6 @@ define nginx::resource::location(
     $content_real = template('nginx/vhost/vhost_location_stub_status.erb')
   } else {
     $content_real = template('nginx/vhost/vhost_location_directory.erb')
-  }
-
-  $final_content = $auth_basic ? {
-    undef   => $content_real,
-    default => "${content_real}${auth_content}"
   }
 
   ## Check for various error condtiions
@@ -131,7 +124,7 @@ define nginx::resource::location(
   if ($ssl_only != true) {
     file {"${nginx::config::nx_temp_dir}/nginx.d/${vhost}-${non_ssl_file_order}-${name}":
       ensure  => $ensure_real,
-      content => $final_content,
+      content => $content_real,
     }
   }
 
@@ -139,7 +132,7 @@ define nginx::resource::location(
   if ($ssl == true) {
     file {"${nginx::config::nx_temp_dir}/nginx.d/${vhost}-${ssl_file_order}-${name}-ssl":
       ensure  => $ensure_real,
-      content => $final_content,
+      content => $content_real,
     }
   }
 }

@@ -6,4 +6,8 @@
 <% if @location_cfg_append -%><% @location_cfg_append.each do |key,value| -%>
     <%= key %> <%= value %>;
 <% end -%><% end -%>
+<% if defined? @auth_basic -%>
+    auth_basic            "<%= @auth_basic %>";
+    auth_basic_user_file  <%= @auth_file_path %>;
+<% end -%>
   }
