@@ -10,3 +10,9 @@ server {
   <% @rewrite.each do |rw| -%>
 rewrite <%= rw %>;
   <% end -%>
+
+<% if !@blocked_agents.empty? -%>
+  if ( $http_user_agent ~* "<%= @blocked_agents.join('|') %>" ) {
+    return 403;
+  }
+<% end -%>
