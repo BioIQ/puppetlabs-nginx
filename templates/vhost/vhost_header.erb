@@ -6,3 +6,9 @@ server {
   <% end %>
   server_name           <%= rewrite_www_to_non_www ? name.gsub(/^www\./, '') : server_name.join(" ") %>;
   access_log            <%= scope.lookupvar('nginx::params::nx_logdir')%>/<%= name %>.access.log;
+
+<% if !@blocked_agents.empty? -%>
+  if ( $http_user_agent ~* "<%= @blocked_agents.join('|') %>" ) {
+    return 403;
+  }
+<% end -%>
