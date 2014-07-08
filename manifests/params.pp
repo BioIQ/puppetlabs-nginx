@@ -27,6 +27,7 @@ class nginx::params {
   $nx_keepalive_timeout  = 65
   $nx_tcp_nodelay        = on
   $nx_gzip               = on
+  $nx_server_tokens      = hiera('nginx_server_tokens', 'off')
 
   $nx_proxy_redirect          = off
   $nx_proxy_set_header        = [

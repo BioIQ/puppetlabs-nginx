@@ -29,5 +29,7 @@ http {
   gzip_disable "MSIE [1-6]\.(?!.*SV1)";
   <% end %>
 
+  server_tokens <%= scope.lookupvar('nginx::params::nx_server_tokens') -%>;
+
   include /etc/nginx/conf.d/*.conf;
 }
