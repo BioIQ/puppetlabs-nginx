@@ -28,6 +28,7 @@ class nginx::params {
   $nx_tcp_nodelay        = on
   $nx_gzip               = on
   $nx_server_tokens      = hiera('nginx_server_tokens', 'off')
+  $nx_denied_ips         = hiera('nginx_denied_ips', [])
 
   $nx_proxy_redirect          = off
   $nx_proxy_set_header        = [
