@@ -12,6 +12,11 @@ server {
   if (-f $document_root/<%= scope.lookupvar('nginx::params::nx_503_maint_path') -%>) {
     return 503;
   }
+
+  error_page 503 @maintenance;
+  location @maintenance {
+    rewrite ^(.*)$ /<%= scope.lookupvar('nginx::params::nx_503_maint_path') -%> break;
+  }
 <% end -%>
 <% end -%>
 
