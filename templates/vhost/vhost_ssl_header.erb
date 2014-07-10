@@ -8,8 +8,8 @@ server {
 <% if @server_www_root -%>
   root <%= @server_www_root %>;
 
-<% if @nx_503_maint_path -%>
-  if (-f $document_root/<%= @nx_503_maint_path -%>) {
+<% if scope.lookupvar('nginx::params::nx_503_maint_path') -%>
+  if (-f $document_root/<%= scope.lookupvar('nginx::params::nx_503_maint_path') -%>) {
     return 503;
   }
 <% end -%>
