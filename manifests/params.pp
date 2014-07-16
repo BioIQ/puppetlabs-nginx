@@ -31,6 +31,10 @@ class nginx::params {
   $nx_denied_ips         = hiera('nginx_denied_ips', [])
   $nx_503_maint_path     = hiera('nginx_503_maint_path', undef)
 
+  $nx_log_rotate_schedule = hiera('nginx_log_rotate_schedule', 'day')
+  $nx_log_rotate_keep     = hiera('nginx_log_rotate_keep', '10')
+  $nx_log_archive_dir     = hiera('nginx_log_archive_dir', undef)
+
   $nx_proxy_redirect          = off
   $nx_proxy_set_header        = [
     'Host $host', 'X-Real-IP $remote_addr',

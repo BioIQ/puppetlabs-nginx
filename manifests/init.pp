@@ -21,6 +21,8 @@
 #    - puppetlabs-stdlib module >= 0.1.6
 #    - plugin sync enabled to obtain the anchor type
 #
+#  logrotate -> https://github.com/rodjek/puppet-logrotate.git
+#
 # Sample Usage:
 #
 # The module works with sensible defaults:
@@ -51,6 +53,8 @@ class nginx (
     require 		=> Class['nginx::package'],
     notify  		=> Class['nginx::service'],
   }
+
+  class { 'nginx::logs': require => Class['nginx::package'] }
 
   class { 'nginx::service': 
     configtest_enable => $configtest_enable,
