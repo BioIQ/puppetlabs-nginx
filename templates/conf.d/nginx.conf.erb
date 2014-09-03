@@ -18,7 +18,7 @@ http {
   sendfile    <%= scope.lookupvar('nginx::params::nx_sendfile')%>;
 
   <% if scope.lookupvar('nginx::params::nx_proxy_cache_enabled') == 'true' -%>
-  proxy_cache_path <%= scope.lookupvar('nginx::params::nx_proxy_cache_path') -%> keys_zone=<%= scope.lookupvar('nginx::params::nx_proxy_cache_key_zone_name') -%>:<%= scope.lookupvar('nginx::params::nx_proxy_cache_key_zone_size') -%>;
+  proxy_cache_path <%= scope.lookupvar('nginx::params::nx_proxy_cache_path') -%> levels=1:2 keys_zone=<%= scope.lookupvar('nginx::params::nx_proxy_cache_key_zone_name') -%>:<%= scope.lookupvar('nginx::params::nx_proxy_cache_key_zone_size') -%> max_size=<%= scope.lookupvar('nginx::params::nx_proxy_cache_max_size') -%>;
   <% end -%>
 
   <% if scope.lookupvar('nginx::params::nx_tcp_nopush') == 'on' %>

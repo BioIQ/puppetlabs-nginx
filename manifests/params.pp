@@ -53,6 +53,7 @@ class nginx::params {
   $nx_proxy_cache_path        = hiera('nginx_proxy_cache_path', undef)
   $nx_proxy_cache_key_zone_name = hiera('nginx_proxy_cache_key_zone_name', undef)
   $nx_proxy_cache_key_zone_size = hiera('nginx_proxy_cache_key_zone_size', undef)
+  $nx_proxy_cache_max_size    = hiera('nginx_proxy_cache_max_size', '1000m')
 
   $nx_logdir = $::kernel ? {
     /(?i-mx:linux)/ => '/var/log/nginx',
