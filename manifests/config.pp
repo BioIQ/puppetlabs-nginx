@@ -50,6 +50,20 @@ class nginx::config(
     ensure => directory,
   }
 
+  if $nx_proxy_cache_enabled == "true" {
+    exec { "create_cache_dir":
+      command => "mkdir -p ${nx_proxy_cache_path}",
+      path    => "/usr/bin:/usr/sbin:/bin:/usr/local/bin",
+      unless  => "test -d ${nx_proxy_cache_path}"
+    }
+
+    file { $nx_proxy_cache_path:
+      ensure  => directory,
+      owner   => $nginx::params::nx_daemon_user,
+      require => Exec["create_cache_dir"]
+    }
+  }
+
   file { "${nginx::config::nx_client_body_temp_path}":
     ensure => directory,
     owner  => $nginx::params::nx_daemon_user,
