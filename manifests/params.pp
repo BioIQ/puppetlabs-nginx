@@ -50,7 +50,7 @@ class nginx::params {
   $nx_proxy_read_timeout      = '90'
   $nx_proxy_buffers           = '32 4k'
   $nx_proxy_cache_enabled     = hiera('nginx_proxy_cache_enabled', false)
-  $nx_proxy_cache_path        = hiera('nginx_proxy_cache_path', undef)
+  $nx_proxy_cache_path        = hiera('nginx_proxy_cache_path', '/var/cache/nginx')
   $nx_proxy_cache_key_zone_name = hiera('nginx_proxy_cache_key_zone_name', undef)
   $nx_proxy_cache_key_zone_size = hiera('nginx_proxy_cache_key_zone_size', undef)
   $nx_proxy_cache_max_size    = hiera('nginx_proxy_cache_max_size', '1000m')
