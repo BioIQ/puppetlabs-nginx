@@ -23,6 +23,11 @@ server {
   ssl on;
   ssl_certificate      <%= @ssl_cert %>;
   ssl_certificate_key  <%= @ssl_key %>;
+  ssl_verify_client    <%= @ssl_verify_client ? 'on' : 'off' %>;
+<% if @ssl_verify_client -%>
+  ssl_client_certificate <%= @ssl_client_certificate %>;
+  ssl_verify_depth <%= @ssl_verify_depth %>;
+<% end -%>
 
   ssl_session_timeout  5m;
 
