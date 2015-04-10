@@ -37,7 +37,7 @@ class nginx::logs(
     ifempty       => false,
     missingok     => true,
     sharedscripts => true,
-    postrotate    => '/etc/init.d/nginx reopen_logs',
+    postrotate    => "/etc/init.d/nginx reopen_logs 2>/dev/null || /bin/kill -USR1 `cat /var/run/nginx.pid 2>/dev/null` 2>/dev/null || logger 'logrotate for nginx failed'",
     dateext       => true
   }
 }
