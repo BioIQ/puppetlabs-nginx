@@ -59,6 +59,7 @@ define nginx::resource::vhost(
   $ssl_verify_client      = false,
   $ssl_client_certificate = undef,
   $ssl_verify_depth       = '3',
+  $ssl_dhparam            = undef,
   $proxy                  = undef,
   $proxy_read_timeout     = $nginx::params::nx_proxy_read_timeout,
   $location_template      = undef,
