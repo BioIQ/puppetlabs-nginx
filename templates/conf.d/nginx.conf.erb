@@ -12,6 +12,7 @@ events {
 http {
   include       /etc/nginx/mime.types;
   default_type  application/octet-stream;
+  ignore_invalid_headers <%= @ignore_invalid_headers %>;
 
   access_log  <%= scope.lookupvar('nginx::params::nx_logdir')%>/access.log;
 
